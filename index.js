@@ -3,16 +3,10 @@
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d')
 const friction = 0.98
+const scoreEl = document.querySelector('#score')
 
 canvas.width = innerWidth
 canvas.height = innerHeight
-
-
-
-
-
-
-
 
 class Player {
     constructor(x, y, radius, color) {
@@ -148,6 +142,7 @@ function spawEnemies() {
 
 
 let animationId;
+let score = 0;
 function animate() {
     animationId = requestAnimationFrame(animate)
     context.fillStyle = 'rgba(0,0,0,0.2)  '
@@ -194,12 +189,19 @@ function animate() {
         projectiles.forEach((projectile, projectileIndex) => {
             const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y)
             if (dist - enemy.radius - projectile.radius < 1) {
+
+                score += 100
+                scoreEl.innerHTML=score
+
+                //create explosions
                 for (let i = 0; i < enemy.radius * 2; i++) {
                     particles.push(new Particle(projectile.x, projectile.y, Math.random() * 2, enemy.color,
                         {
                             x: (Math.random() - 0.5) * (Math.random() * 8),
                             y: (Math.random() - 0.5) * (Math.random() * 8)
                         }))
+
+
                 }
 
                 if (enemy.radius - 10 > 10) {
