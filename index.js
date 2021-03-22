@@ -4,6 +4,9 @@ const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d')
 const friction = 0.98
 const scoreEl = document.querySelector('#score')
+const startGameEl = document.querySelector('#startGameEL')
+const startGameMenuEl = document.querySelector('#startGameMenuEl')
+const gameoverScoreEl = document.querySelector('#gameOverScore')
 
 canvas.width = innerWidth
 canvas.height = innerHeight
@@ -180,6 +183,9 @@ function animate() {
         // game over
         if (dist - enemy.radius - player.radius < 1) {
             cancelAnimationFrame(animationId)
+            startGameMenuEl.style.display = 'initial';
+            gameoverScoreEl.innerHTML = score;
+
 
         }
 
@@ -190,8 +196,7 @@ function animate() {
             const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y)
             if (dist - enemy.radius - projectile.radius < 1) {
 
-                score += 100
-                scoreEl.innerHTML=score
+
 
                 //create explosions
                 for (let i = 0; i < enemy.radius * 2; i++) {
@@ -205,6 +210,8 @@ function animate() {
                 }
 
                 if (enemy.radius - 10 > 10) {
+                    score += 100
+                    scoreEl.innerHTML = score
                     gsap.to(enemy, {
                         radius: enemy.radius - 10
                     })
@@ -217,6 +224,8 @@ function animate() {
                         enemies.splice(index, 1)
                         projectiles.splice(projectileIndex, 1)
                     }, 0)
+                    score += 250
+                    scoreEl.innerHTML = score
                 }
 
             }
@@ -231,16 +240,19 @@ window.addEventListener('click', (event) => {
         x: Math.cos(angle) * 4,
         y: Math.sin(angle) * 4
     }
-
-
-
     projectiles.push(new Projectile(canvas.width / 2, canvas.height / 2, 5, 'red', velocity))
+})
 
+
+startGameEl.addEventListener('click', () => {
+    startGameMenuEl.style.display = 'none';
+
+    animate();
+    spawEnemies();
 })
 
 
 
 
 
-animate();
-spawEnemies();
+
