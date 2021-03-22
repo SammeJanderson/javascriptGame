@@ -87,7 +87,7 @@ const enemies = [];
 
 function spawEnemies() {
     setInterval(() => {
-        const radius =Math.random() * (25 -10) +10;
+        const radius = Math.random() * (25 - 10) + 10;
 
         let x
         let y
@@ -96,9 +96,9 @@ function spawEnemies() {
             x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius
             y = Math.random() * canvas.height;
             //  y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius
-        }else{
+        } else {
             x = Math.random() * canvas.width + radius
-             y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius
+            y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius
 
         }
 
@@ -123,8 +123,15 @@ function animate() {
         projectile.update();
     })
 
-    enemies.forEach(enemy => {
+    enemies.forEach((enemy, index)  => {
         enemy.update();
+        projectiles.forEach((projectile, projectileIndex) => {
+            const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y)
+            if (dist - enemy.radius - projectile.radius < 1) {
+                enemies.splice(index, 1)
+                projectiles.splice(projectileIndex, 1)
+            }
+        })
     })
 }
 
