@@ -115,21 +115,40 @@ function spawEnemies() {
     }, 1000)
 }
 
+
+let animationId ;
 function animate() {
-    requestAnimationFrame(animate)
+    animationId = requestAnimationFrame(animate)
     context.clearRect(0, 0, canvas.width, canvas.height)
     player.draw();
     projectiles.forEach(projectile => {
         projectile.update();
     })
 
-    enemies.forEach((enemy, index)  => {
+
+    //collision
+    enemies.forEach((enemy, index) => {
         enemy.update();
+        const dist = Math.hypot(player.x - enemy.x, player.y - enemy.y)
+
+        // game over
+        if (dist - enemy.radius - player.radius < 1){
+            cancelAnimationFrame(animationId)
+
+        }
+
+
+
         projectiles.forEach((projectile, projectileIndex) => {
             const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y)
             if (dist - enemy.radius - projectile.radius < 1) {
-                enemies.splice(index, 1)
-                projectiles.splice(projectileIndex, 1)
+
+                //prevent flashing when removing enemies
+                setTimeout(() => {
+                    enemies.splice(index, 1)
+                    projectiles.splice(projectileIndex, 1)
+                }, 0)
+
             }
         })
     })
