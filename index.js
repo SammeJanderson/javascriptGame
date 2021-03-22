@@ -104,7 +104,7 @@ function spawEnemies() {
 
 
 
-        const color = `hsl(${Math.random()*360},50%,50%)`
+        const color = `hsl(${Math.random() * 360},50%,50%)`
         const angle = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x)
         const velocity = {
             x: Math.cos(angle),
@@ -119,7 +119,7 @@ function spawEnemies() {
 let animationId;
 function animate() {
     animationId = requestAnimationFrame(animate)
-    context.fillStyle = 'rgba(0,0,0,0.2)  '  
+    context.fillStyle = 'rgba(0,0,0,0.2)  '
     context.fillRect(0, 0, canvas.width, canvas.height)
     player.draw();
     projectiles.forEach((projectile, index) => {
@@ -152,15 +152,25 @@ function animate() {
 
 
 
+        //enemy/projectile collision
         projectiles.forEach((projectile, projectileIndex) => {
             const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y)
             if (dist - enemy.radius - projectile.radius < 1) {
 
-                //prevent flashing when removing enemies
-                setTimeout(() => {
-                    enemies.splice(index, 1)
-                    projectiles.splice(projectileIndex, 1)
-                }, 0)
+                if (enemy.radius -10  > 10) {
+                    gsap.to(enemy, {
+                        radius: enemy.radius -10
+                    })
+                    setTimeout(() => {
+                        projectiles.splice(projectileIndex, 1)
+                    }, 0)
+                } else {
+                    //prevent flashing when removing enemies
+                    setTimeout(() => {
+                        enemies.splice(index, 1)
+                        projectiles.splice(projectileIndex, 1)
+                    }, 0)
+                }
 
             }
         })
@@ -171,7 +181,7 @@ function animate() {
 window.addEventListener('click', (event) => {
     const angle = Math.atan2(event.clientY - canvas.height / 2, event.clientX - canvas.width / 2)
     const velocity = {
-        x: Math.cos(angle) * 4 ,
+        x: Math.cos(angle) * 4,
         y: Math.sin(angle) * 4
     }
 
