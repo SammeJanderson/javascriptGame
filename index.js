@@ -183,7 +183,7 @@ function animate() {
         // game over
         if (dist - enemy.radius - player.radius < 1) {
             cancelAnimationFrame(animationId)
-            startGameMenuEl.style.display = 'initial';
+            startGameMenuEl.style.display = 'flex';
             gameoverScoreEl.innerHTML = score;
 
 
